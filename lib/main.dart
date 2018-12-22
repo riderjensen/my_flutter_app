@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
           appBar: AppBar(
             title: Text('Trading Post'),
           ),
-          body: ProductManager()),
+          body: ProductManager()
+          ),
     );
   }
 }
