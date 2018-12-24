@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/products/products.dart';
+import '../scoped-models/main.dart';
 
 class ProductsPage extends StatelessWidget {
-  final List<Map<String, dynamic>> products;
-
-  ProductsPage(this.products);
-
   Widget _buildSideDrawer(context) {
     return Drawer(
       child: Column(
@@ -34,16 +32,22 @@ class ProductsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Trading Post'),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.favorite),
-            color: Theme.of(context).accentColor,
-            onPressed: () {},
+          ScopedModelDescendant<MainModel>(
+            builder: (BuildContext context, Widget child, MainModel model) {
+              return IconButton(
+                icon: Icon(model.displayFavoritesOnly
+                    ? Icons.favorite
+                    : Icons.favorite_border),
+                color: Theme.of(context).accentColor,
+                onPressed: () {
+                  model.toggleDisplayFavorites();
+                },
+              );
+            },
           )
         ],
       ),
-      body: Products(
-        products,
-      ),
+      body: Products(),
     );
   }
 }
