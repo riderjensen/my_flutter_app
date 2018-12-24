@@ -73,5 +73,6 @@ class ProductsModel extends Model {
   void toggleDisplayFavorites() {
     _showFavorites = !_showFavorites;
     notifyListeners();
+    _selectedProductIndex = null;
   }
 }
