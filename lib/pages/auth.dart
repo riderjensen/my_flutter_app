@@ -8,9 +8,12 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  String _emailValue;
-  String _passwordValue;
-  bool _acceptTerms = false;
+  final Map<String, dynamic> _formData = {
+    'email': null,
+    'password': null,
+    'terms': false
+  };
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
@@ -22,7 +25,7 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildEmailTextField() {
-    return TextField(
+    return TextFormField(
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         labelText: 'Email',
@@ -31,16 +34,21 @@ class _AuthPageState extends State<AuthPage> {
         fillColor: Colors.white,
       ),
       style: TextStyle(color: Theme.of(context).accentColor),
-      onChanged: (value) {
-        setState(() {
-          _emailValue = value;
-        });
+      validator: (String value) {
+        if (value.isEmpty ||
+            !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                .hasMatch(value)) {
+          return 'Email is required and should be a valid email';
+        }
+      },
+      onSaved: (String value) {
+        _formData['email'] = value;
       },
     );
   }
 
   Widget _buildPasswordTextField() {
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(
         labelText: 'Password',
         labelStyle: TextStyle(color: Theme.of(context).accentColor),
@@ -48,20 +56,23 @@ class _AuthPageState extends State<AuthPage> {
         fillColor: Colors.white,
       ),
       obscureText: true,
-      onChanged: (value) {
-        setState(() {
-          _passwordValue = value;
-        });
+      validator: (String value) {
+        if (value.isEmpty || value.length < 6) {
+          return 'Password is required and should be 6+ characters long';
+        }
+      },
+      onSaved: (String value) {
+        _formData['password'] = value;
       },
     );
   }
 
   Widget _buildAcceptSwitchListTile() {
     return SwitchListTile(
-      value: _acceptTerms,
+      value: _formData['terms'],
       onChanged: (bool value) {
         setState(() {
-          _acceptTerms = value;
+          _formData['terms'] = value;
         });
       },
       title: Text('Accept Terms'),
@@ -69,8 +80,10 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   void _submitForm() {
-    print(_emailValue);
-    print(_passwordValue);
+    if (!_formKey.currentState.validate() || !_formData['terms']) {
+      return;
+    }
+    _formKey.currentState.save();
     Navigator.pushReplacementNamed(context, '/products');
   }
 
@@ -91,17 +104,20 @@ class _AuthPageState extends State<AuthPage> {
           child: SingleChildScrollView(
             child: Container(
               width: targetWidth,
-              child: Column(
-                children: <Widget>[
-                  _buildEmailTextField(),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  _buildPasswordTextField(),
-                  _buildAcceptSwitchListTile(),
-                  SizedBox(height: 10.0),
-                  RaisedButton(child: Text('Login'), onPressed: _submitForm),
-                ],
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    _buildEmailTextField(),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    _buildPasswordTextField(),
+                    _buildAcceptSwitchListTile(),
+                    SizedBox(height: 10.0),
+                    RaisedButton(child: Text('Login'), onPressed: _submitForm),
+                  ],
+                ),
               ),
             ),
           ),
