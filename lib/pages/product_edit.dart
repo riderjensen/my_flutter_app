@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class ProductCreatePage extends StatefulWidget {
+class ProductEditPage extends StatefulWidget {
   final Function addProduct;
 
-  ProductCreatePage(this.addProduct);
+  ProductEditPage(this.addProduct);
 
   @override
   State<StatefulWidget> createState() {
-    return _ProductCreatePage();
+    return _ProductEditPage();
   }
 }
 
-class _ProductCreatePage extends State<ProductCreatePage> {
+class _ProductEditPage extends State<ProductEditPage> {
   final Map<String, dynamic> _formData = {
     'title': null,
     'description': null,
