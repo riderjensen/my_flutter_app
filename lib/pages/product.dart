@@ -57,7 +57,7 @@ class ProductPage extends StatelessWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Image.asset(product.image),
+            Image.network(product.image),
             _buildTitleContainer(product.title),
             _buildAddressAndPriceContainer(product.price),
             _buildDescriptionContainer(product.description),
