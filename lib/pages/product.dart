@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:map_view/map_view.dart';
 import 'dart:async';
 
 import '../widgets/ui_elements/title_default.dart';
@@ -16,15 +17,59 @@ class ProductPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAddressAndPriceContainer(double price) {
-    return Container(
-      child: Text(
-        'Address Here' + '- \$${price.toString()}',
-        style: TextStyle(
-          fontSize: 16.0,
-          color: Colors.grey,
+  void _showMap() {
+    final List<Marker> markers = <Marker>[
+      Marker('position', 'Position', product.location.latitude,
+          product.location.longitude)
+    ];
+    final cameraPosition = CameraPosition(
+        Location(product.location.latitude, product.location.longitude), 14.0);
+    final mapView = MapView();
+    mapView.show(
+        MapOptions(
+            initialCameraPosition: cameraPosition,
+            mapViewType: MapViewType.normal,
+            title: 'Product Location'),
+        toolbarActions: [ToolbarAction('Close', 1)]);
+    mapView.onToolbarAction.listen((int id) {
+      if (id == 1) {
+        mapView.dismiss();
+      }
+    });
+    mapView.onMapReady.listen((_) {
+      mapView.setMarkers(markers);
+    });
+  }
+
+  Widget _buildAddressAndPriceContainer(String address, double price) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        GestureDetector(
+          onTap: _showMap,
+          child: Text(
+            address,
+            style: TextStyle(
+              fontSize: 16.0,
+              color: Colors.grey,
+            ),
+          ),
         ),
-      ),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 5.0),
+          child: Text(
+            '|',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+        Text(
+          address + '- \$${price.toString()}',
+          style: TextStyle(
+            fontSize: 16.0,
+            color: Colors.grey,
+          ),
+        ),
+      ],
     );
   }
 
@@ -42,6 +87,7 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(product.image);
     return WillPopScope(
       onWillPop: () {
         Navigator.pop(context, false);
@@ -61,7 +107,8 @@ class ProductPage extends StatelessWidget {
               placeholder: AssetImage('assets/placeholder.png'),
             ),
             _buildTitleContainer(product.title),
-            _buildAddressAndPriceContainer(product.price),
+            _buildAddressAndPriceContainer(
+                product.location.address, product.price),
             _buildDescriptionContainer(product.description),
           ],
         ),
