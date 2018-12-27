@@ -50,7 +50,7 @@ class ProductPage extends StatelessWidget {
           child: Text(
             address,
             style: TextStyle(
-              fontSize: 16.0,
+              fontSize: 12.0,
               color: Colors.grey,
             ),
           ),
@@ -63,9 +63,9 @@ class ProductPage extends StatelessWidget {
           ),
         ),
         Text(
-          address + '- \$${price.toString()}',
+          '\$${price.toString()}',
           style: TextStyle(
-            fontSize: 16.0,
+            fontSize: 12.0,
             color: Colors.grey,
           ),
         ),
