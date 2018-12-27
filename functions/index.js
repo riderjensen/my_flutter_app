@@ -33,7 +33,7 @@ exports.storeImage = functions.https.onRequest((req, res) => {
 				message: 'Not allowed.'
 			});
 		}
-		if (!req.headers.authorization || !req.headers.startsWith('Bearer ')) {
+		if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
 			return res.status(401).json({
 				message: 'Not authorized'
 			});
@@ -73,7 +73,7 @@ exports.storeImage = functions.https.onRequest((req, res) => {
 				.verifyIdToken(idToken)
 				.then(decodedToken => {
 					return bucket.upload(uploadData.filePath, {
-						uploadType: 'medial',
+						uploadType: 'media',
 						destination: imagePath,
 						metadata: {
 							metadata: uploadData.type,
