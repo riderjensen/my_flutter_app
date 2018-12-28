@@ -181,8 +181,9 @@ mixin ProductsModel on ConnectedProductsModel {
       'userEmail': selectedProduct.userEmail,
       'userId': selectedProduct.userId
     };
+
     try {
-      final http.Response response = await http.put(
+      await http.put(
           'https://my-flutter-products-fbbbc.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
           body: jsonEncode(updateData));
 
@@ -199,6 +200,7 @@ mixin ProductsModel on ConnectedProductsModel {
           userId: selectedProduct.userId);
       _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
+      print(updatedProduct.image);
       return true;
     } catch (error) {
       _isLoading = false;
@@ -215,7 +217,7 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     return http
         .delete(
-            'https://my-flutter-products-fbbbc.firebaseio.com/products/${deletedProductId}.json?auth=${_authenticatedUser.token}')
+            'https://my-flutter-products-fbbbc.firebaseio.com/products/$deletedProductId.json?auth=${_authenticatedUser.token}')
         .then((http.Response response) {
       _isLoading = false;
 
@@ -228,8 +230,12 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  Future<Null> fetchProducts({onlyForUser = false}) {
+  Future<Null> fetchProducts({onlyForUser = false, clearExisting = false}) {
+    if (clearExisting) {
+      _products = [];
+    }
     _isLoading = true;
+
     notifyListeners();
     print('loading prods?');
 
@@ -319,8 +325,10 @@ mixin ProductsModel on ConnectedProductsModel {
           userEmail: selectedProduct.userEmail,
           userId: selectedProduct.userId);
       _products[selectedProductIndex] = updatedProduct;
+
       notifyListeners();
     }
+    selectProduct(null);
   }
 
   void selectProduct(String productId) {
