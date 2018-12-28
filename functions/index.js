@@ -76,19 +76,26 @@ exports.storeImage = functions.https.onRequest((req, res) => {
 						uploadType: 'media',
 						destination: imagePath,
 						metadata: {
-							metadata: uploadData.type,
-							firebaseStorageDownloadToken: id
+							metadata: {
+								contentType: uploadData.type,
+								firebaseStorageDownloadTokens: id
+							}
 						}
 					});
 				}).then(() => {
 					return res.status(201).json({
-						imageUrl: 'https://firebasestorage.googleapis.com/v0/b/' + bucket.name + '/o/' + encodeURIComponent(imagePath) + '?alt=media&token=' + id,
+						imageUrl: 'https://firebasestorage.googleapis.com/v0/b/' +
+							bucket.name +
+							'/o/' +
+							encodeURIComponent(imagePath) +
+							'?alt=media&token=' +
+							id,
 						imagePath: imagePath
 					});
 				})
 				.catch(error => {
 					return res.status(401).json({
-						error: 'Unaithorized'
+						error: 'Unauthorized!'
 					});
 				});
 		});
