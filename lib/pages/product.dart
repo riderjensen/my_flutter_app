@@ -4,14 +4,23 @@ import 'dart:async';
 
 import '../widgets/ui_elements/title_default.dart';
 import '../models/product.dart';
+import '../widgets/products/product_fab.dart';
 
-class ProductPage extends StatelessWidget {
+class ProductPage extends StatefulWidget {
   final Product product;
 
   ProductPage(this.product);
 
+  @override
+  State<StatefulWidget> createState() {
+    return _ProductPage();
+  }
+}
+
+class _ProductPage extends State<ProductPage> {
   Widget _buildTitleContainer(String title) {
     return Container(
+      alignment: Alignment.center,
       padding: EdgeInsets.all(10.0),
       child: TitleDefault(title),
     );
@@ -19,11 +28,13 @@ class ProductPage extends StatelessWidget {
 
   void _showMap() {
     final List<Marker> markers = <Marker>[
-      Marker('position', 'Position', product.location.latitude,
-          product.location.longitude)
+      Marker('position', 'Position', widget.product.location.latitude,
+          widget.product.location.longitude)
     ];
     final cameraPosition = CameraPosition(
-        Location(product.location.latitude, product.location.longitude), 14.0);
+        Location(widget.product.location.latitude,
+            widget.product.location.longitude),
+        14.0);
     final mapView = MapView();
     mapView.show(
         MapOptions(
@@ -87,31 +98,41 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(product.image);
     return WillPopScope(
       onWillPop: () {
         Navigator.pop(context, false);
         return Future.value(false);
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(product.title),
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            FadeInImage(
-              image: NetworkImage(product.image),
-              height: 300.0,
-              fit: BoxFit.cover,
-              placeholder: AssetImage('assets/placeholder.png'),
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              expandedHeight: 256.0,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(widget.product.title),
+                background: Hero(
+                  tag: widget.product.id,
+                  child: FadeInImage(
+                    image: NetworkImage(widget.product.image),
+                    height: 300.0,
+                    fit: BoxFit.cover,
+                    placeholder: AssetImage('assets/placeholder.png'),
+                  ),
+                ),
+              ),
             ),
-            _buildTitleContainer(product.title),
-            _buildAddressAndPriceContainer(
-                product.location.address, product.price),
-            _buildDescriptionContainer(product.description),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                _buildTitleContainer(widget.product.title),
+                _buildAddressAndPriceContainer(
+                    widget.product.location.address, widget.product.price),
+                _buildDescriptionContainer(widget.product.description),
+              ]),
+            )
           ],
         ),
+        floatingActionButton: ProductFAB(widget.product),
       ),
     );
   }
