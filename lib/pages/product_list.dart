@@ -18,7 +18,7 @@ class ProductListPage extends StatefulWidget {
 class _ProductListPageState extends State<ProductListPage> {
   @override
   initState() {
-    widget.model.fetchProducts(onlyForUser: true);
+    widget.model.fetchProducts(onlyForUser: true, clearExisting: true);
     super.initState();
   }
 
@@ -59,8 +59,9 @@ class _ProductListPageState extends State<ProductListPage> {
               children: <Widget>[
                 ListTile(
                     leading: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(model.allProducts[index].image),
+                      backgroundImage: model.allProducts[index] == null
+                          ? NetworkImage(model.allProducts[index].image)
+                          : AssetImage('assets/placeholder.png'),
                     ),
                     title: Text(model.allProducts[index].title),
                     subtitle:

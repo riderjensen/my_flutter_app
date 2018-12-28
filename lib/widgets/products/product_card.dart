@@ -8,28 +8,28 @@ import './address_tag.dart';
 import '../../scoped-models/main.dart';
 import '../../models/product.dart';
 
-class ProductCard extends StatefulWidget {
+class ProductCard extends StatelessWidget {
   final Product product;
-  final int productIndex;
 
-  ProductCard(this.product, this.productIndex);
+  ProductCard(this.product);
 
-  @override
-  State<StatefulWidget> createState() {
-    return _ProductCard();
-  }
-}
-
-class _ProductCard extends State<ProductCard> {
   Widget _buildTitlePriceContainer() {
     return Container(
-      margin: EdgeInsets.only(top: 10.0),
+      padding: EdgeInsets.only(top: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          TitleDefault(widget.product.title),
-          SizedBox(width: 10.0),
-          PriceTag(widget.product.price.toString())
+          Flexible(
+            child: TitleDefault(product.title),
+          ),
+          Flexible(
+            child: SizedBox(
+              width: 8.0,
+            ),
+          ),
+          Flexible(
+            child: PriceTag(product.price.toString()),
+          )
         ],
       ),
     );
@@ -43,21 +43,19 @@ class _ProductCard extends State<ProductCard> {
           icon: Icon(Icons.info),
           color: Theme.of(context).accentColor,
           onPressed: () {
-            model.selectProduct(model.allProducts[widget.productIndex].id);
-            Navigator.pushNamed<bool>(context,
-                    '/product/' + model.allProducts[widget.productIndex].id)
+            model.selectProduct(product.id);
+            Navigator.pushNamed<bool>(context, '/product/' + product.id)
                 .then((_) {
               model.selectProduct(null);
             });
           },
         ),
         IconButton(
-          icon: Icon(model.allProducts[widget.productIndex].isFavorite
-              ? Icons.favorite
-              : Icons.favorite_border),
+          icon:
+              Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border),
           color: Colors.red,
           onPressed: () {
-            model.selectProduct(model.allProducts[widget.productIndex].id);
+            model.selectProduct(product.id);
             model.toggleProductFavorite();
           },
         ),
@@ -71,16 +69,26 @@ class _ProductCard extends State<ProductCard> {
       child: Column(
         children: <Widget>[
           Hero(
-            tag: widget.product.id,
-            child: FadeInImage(
-              image: NetworkImage(widget.product.image),
-              height: 300.0,
-              fit: BoxFit.cover,
-              placeholder: AssetImage('assets/placeholder.png'),
-            ),
+            tag: product.id,
+            child: product.image != null
+                ? FadeInImage(
+                    image: NetworkImage(product.image),
+                    height: 300.0,
+                    fit: BoxFit.cover,
+                    placeholder: AssetImage('assets/placeholder.png'),
+                  )
+                : FadeInImage(
+                    image: AssetImage('assets/placeholder.png'),
+                    height: 300.0,
+                    fit: BoxFit.cover,
+                    placeholder: AssetImage('assets/placeholder.png'),
+                  ),
           ),
           _buildTitlePriceContainer(),
-          AddressTag(widget.product.location.address),
+          SizedBox(
+            height: 10.0,
+          ),
+          AddressTag(product.location.address),
           _buildButtonBar(context)
         ],
       ),

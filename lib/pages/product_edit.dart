@@ -48,7 +48,7 @@ class _ProductEditPage extends State<ProductEditPage> {
       _descriptionTextController.text = '';
     } else if (product != null &&
         _descriptionTextController.text.trim() == '') {
-      _descriptionTextController.text = product.title;
+      _descriptionTextController.text = product.description;
     }
     return TextFormField(
         decoration: InputDecoration(labelText: 'Product Description'),
@@ -65,7 +65,7 @@ class _ProductEditPage extends State<ProductEditPage> {
     if (product == null && _priceTextController.text.trim() == '') {
       _priceTextController.text = '';
     } else if (product != null && _priceTextController.text.trim() == '') {
-      _priceTextController.text = product.title;
+      _priceTextController.text = product.price.toString();
     }
     return TextFormField(
         controller: _priceTextController,
