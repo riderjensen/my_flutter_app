@@ -105,7 +105,6 @@ mixin ProductsModel on ConnectedProductsModel {
     _isLoading = true;
     notifyListeners();
     final uploadData = await uploadImage(image);
-
     if (uploadData == null) {
       print('Upload failed!');
       return false;
@@ -127,9 +126,9 @@ mixin ProductsModel on ConnectedProductsModel {
     };
     try {
       final http.Response response = await http.post(
-          'https://flutter-products.firebaseio.com/products.json?auth=${_authenticatedUser.token}',
+          'https://my-flutter-products-fbbbc.firebaseio.com/products.json?auth=${_authenticatedUser.token}',
           body: json.encode(productData));
-
+      print(response.statusCode);
       if (response.statusCode != 200 && response.statusCode != 201) {
         _isLoading = false;
         notifyListeners();
