@@ -181,7 +181,7 @@ class _ProductEditPage extends State<ProductEditPage> {
         _titleTextController.text,
         _descriptionTextController.text,
         _formData['image'],
-        _priceTextController.text,
+        double.parse(_priceTextController.text),
         _formData['location'],
       ).then((_) {
         Navigator.pushReplacementNamed(context, '/products')
