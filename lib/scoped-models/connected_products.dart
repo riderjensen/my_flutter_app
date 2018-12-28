@@ -78,7 +78,6 @@ mixin ProductsModel on ConnectedProductsModel {
     if (imagePath != null) {
       imageUploadRequest.fields['imagePath'] = Uri.encodeComponent(imagePath);
     }
-    print(_authenticatedUser.token);
     imageUploadRequest.headers['Authorization'] =
         'Bearer ${_authenticatedUser.token}';
 
@@ -126,8 +125,9 @@ mixin ProductsModel on ConnectedProductsModel {
       final http.Response response = await http.post(
           'https://my-flutter-products-fbbbc.firebaseio.com/products.json?auth=${_authenticatedUser.token}',
           body: json.encode(productData));
-      print(response.statusCode);
+
       if (response.statusCode != 200 && response.statusCode != 201) {
+        print(response.statusCode);
         _isLoading = false;
         notifyListeners();
         return false;
@@ -231,11 +231,12 @@ mixin ProductsModel on ConnectedProductsModel {
   Future<Null> fetchProducts({onlyForUser = false}) {
     _isLoading = true;
     notifyListeners();
+    print('loading prods?');
+
     return http
         .get(
             'https://my-flutter-products-fbbbc.firebaseio.com/products.json?auth=${_authenticatedUser.token}')
         .then<Null>((http.Response response) {
-      _isLoading = false;
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
 
@@ -268,7 +269,7 @@ mixin ProductsModel on ConnectedProductsModel {
           ? fetchedProductList.where((Product product) {
               return product.userId == _authenticatedUser.id;
             }).toList()
-          : fetchProducts();
+          : fetchedProductList;
       _isLoading = false;
       notifyListeners();
       _sellProductId = null;
@@ -428,6 +429,7 @@ mixin UserModel on ConnectedProductsModel {
     _authenticatedUser = null;
     _authTimer.cancel();
     _userSubject.add(false);
+    _sellProductId = null;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
     prefs.remove('userEmail');
