@@ -10,6 +10,7 @@
 .history
 .svn/
 node_modules
+key.properties
 
 # IntelliJ related
 *.iml
@@ -72,3 +73,5 @@ build/
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 functions/flutter-app\.json
+
+android/app/key\.jks
