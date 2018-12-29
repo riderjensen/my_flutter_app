@@ -1,4 +1,4 @@
-package com.example.myflutterapp;
+package com.riderjensen.tradingpost;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
