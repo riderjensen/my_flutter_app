@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
       model: _model,
       child: MaterialApp(
         theme: getAdaptiveThemeData(context),
-        // home: AuthPage(),
+        title: 'Trading Post',
         routes: {
           '/': (BuildContext context) =>
               !_isAuthenticated ? AuthPage() : ProductsPage(_model),
