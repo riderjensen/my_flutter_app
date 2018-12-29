@@ -17,6 +17,8 @@ class AdminPage extends StatelessWidget {
           AppBar(
             title: Text('Admin Choose'),
             automaticallyImplyLeading: false,
+            elevation:
+                Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
           ),
           ListTile(
             leading: Icon(Icons.shop),
@@ -39,7 +41,9 @@ class AdminPage extends StatelessWidget {
       child: Scaffold(
         drawer: _buildSideDrawer(context),
         appBar: AppBar(
-          title: Text('Admin page'),
+          title: Text('Manage Products'),
+          elevation:
+              Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
           bottom: TabBar(
             tabs: <Widget>[
               Tab(
