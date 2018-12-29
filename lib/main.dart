@@ -10,6 +10,7 @@ import './scoped-models/main.dart';
 import './models/product.dart';
 import './widgets/helpers/custom_route.dart';
 import './shared/global_config.dart';
+import './shared/adaptive_theme.dart';
 
 void main() {
   MapView.setApiKey(APIKEY);
@@ -43,11 +44,7 @@ class _MyAppState extends State<MyApp> {
     return ScopedModel<MainModel>(
       model: _model,
       child: MaterialApp(
-        theme: ThemeData(
-            primarySwatch: Colors.grey,
-            accentColor: Colors.teal,
-            brightness: Brightness.light,
-            buttonColor: Colors.teal),
+        theme: getAdaptiveThemeData(context),
         // home: AuthPage(),
         routes: {
           '/': (BuildContext context) =>
