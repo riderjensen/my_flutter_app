@@ -172,7 +172,7 @@ mixin ProductsModel on ConnectedProductsModel {
     final Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
-      'image': imageUrl,
+      'imageUrl': imageUrl,
       'imagePath': imagePath,
       'price': price,
       'loc_lat': locData.latitude,
@@ -237,7 +237,6 @@ mixin ProductsModel on ConnectedProductsModel {
     _isLoading = true;
 
     notifyListeners();
-    print('loading prods?');
 
     return http
         .get(
