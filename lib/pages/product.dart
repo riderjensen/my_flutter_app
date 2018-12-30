@@ -86,7 +86,7 @@ class _ProductPage extends State<ProductPage> {
 
   Widget _buildDescriptionContainer(String description) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 15.0),
+      padding: EdgeInsets.all(15.0),
       child: Text(
         description,
         style: TextStyle(
