@@ -59,7 +59,7 @@ class _ProductListPageState extends State<ProductListPage> {
               children: <Widget>[
                 ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: model.allProducts[index] == null
+                      backgroundImage: model.allProducts[index] != null
                           ? NetworkImage(model.allProducts[index].image)
                           : AssetImage('assets/placeholder.png'),
                     ),
